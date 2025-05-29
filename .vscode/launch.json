@@ -7,7 +7,7 @@
         {
             "type": "node",
             "request": "launch",
-            "name": "Launch Program",
+            "name": "Launch Better SQLite Program",
             "skipFiles": [
                 "<node_internals>/**"
             ],
