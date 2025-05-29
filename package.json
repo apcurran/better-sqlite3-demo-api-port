@@ -4,7 +4,9 @@
     "description": "",
     "main": "server.js",
     "scripts": {
-        "test": ""
+        "test": "",
+        "start": "node --env-file=.env server.js",
+        "dev": "node --watch --env-file=.env server.js"
     },
     "author": "Alex Curran",
     "license": "ISC",
