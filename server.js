@@ -3,6 +3,7 @@
 const express = require("express");
 
 const authorsRouter = require("./api/routes/authors-router");
+const booksRouter = require("./api/routes/books-router");
 
 const app = express();
 
@@ -15,6 +16,7 @@ if (process.env.DEV_DEBUG === "true") {
 
 // API routers
 app.use("/api/authors", authorsRouter);
+app.use("/api/books", booksRouter);
 
 // general server error handler
 app.use((err, req, res, next) => {
