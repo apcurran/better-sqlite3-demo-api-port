@@ -29,7 +29,7 @@ function getBooks(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function getBook(req, res, next) {
     try {
-       
+
 
     } catch (err) {
         next(err);
@@ -39,7 +39,7 @@ function getBook(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function postBook(req, res, next) {
     try {
-       
+
 
     } catch (err) {
         next(err);
@@ -49,7 +49,20 @@ function postBook(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function deleteBook(req, res, next) {
     try {
-       
+        const { bookId } = req.params;
+        const statement = db.prepare(`
+            DELETE FROM book
+            WHERE book_id = ?;
+        `);
+        const infoObj = statement.run(bookId);
+
+        if (infoObj.changes === 0) {
+            res.status(404).json({ message: "Book not found." });
+
+            return; // stop execution early to not run the later response
+        }
+
+        res.status(200).json({ message: "Book has been deleted." });
 
     } catch (err) {
         next(err);
