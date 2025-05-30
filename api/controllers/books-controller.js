@@ -29,7 +29,29 @@ function getBooks(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function getBook(req, res, next) {
     try {
+        const { bookId } = req.params;
+        const statement = db.prepare(`
+            SELECT
+                book.book_id,
+                book.title,
+                book.year,
+                book.pages,
+                book.genre,
+                author.first_name,
+                author.last_name
+            FROM book INNER JOIN author
+                ON book.author_id = author.author_id
+            WHERE book.book_id = ?;
+        `);
+        const book = statement.get(bookId);
+        
+        if (!book) {
+            res.status(404).json({ message: "Book not found." });
+            
+            return;
+        }
 
+        res.status(200).json(book);
 
     } catch (err) {
         next(err);
