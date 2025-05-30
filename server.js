@@ -8,6 +8,11 @@ const app = express();
 
 app.use(express.json());
 
+if (process.env.DEV_DEBUG === "true") {
+    const morgan = require("morgan");
+    app.use(morgan("dev"));
+}
+
 // API routers
 app.use("/api/authors", authorsRouter);
 
@@ -32,5 +37,5 @@ app.use((err, req, res, next) => {
 });
 
 app.listen(process.env.PORT, () => {
-    console.log(`Server running on port ${process.env.PORT}.`);
+    console.log(`Server running on port ${process.env.PORT}, debug mode ${process.env.DEV_DEBUG ? "on" : "off"}.`);
 });

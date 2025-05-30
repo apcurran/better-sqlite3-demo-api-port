@@ -16,7 +16,8 @@
         "@eslint/markdown": "^6.4.0",
         "@stylistic/eslint-plugin": "^4.4.0",
         "eslint": "^9.27.0",
-        "globals": "^16.2.0"
+        "globals": "^16.2.0",
+        "morgan": "^1.10.0"
     },
     "dependencies": {
         "better-sqlite3": "^11.10.0",
