@@ -39,7 +39,21 @@ function getAuthor(req, res, next) {
 
 /** @type {import("express").RequestHandler} */
 function postAuthor(req, res, next) {
+    try {
+        const { firstName, lastName } = req.body;
+        const statement = db.prepare(`
+            INSERT INTO author
+                (first_name, last_name)
+            VALUES
+                (?, ?);
+        `);
+        statement.run(firstName, lastName);
 
+        res.status(201).json({ message: "Author has been added." });
+        
+    } catch (err) {
+        next(err);
+    }
 }
 
 /** @type {import("express").RequestHandler} */
