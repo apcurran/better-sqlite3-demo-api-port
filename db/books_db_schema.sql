@@ -1,11 +1,11 @@
 CREATE TABLE author (
-    author_id INTEGER PRIMARY KEY,
+    author_id INTEGER PRIMARY KEY AUTOINCREMENT,
     first_name TEXT NOT NULL,
     last_name TEXT NOT NULL
 );
 
 CREATE TABLE book (
-    book_id INTEGER PRIMARY KEY,
+    book_id INTEGER PRIMARY KEY AUTOINCREMENT,
     title TEXT NOT NULL,
     year INTEGER NOT NULL,
     pages INTEGER NOT NULL,
