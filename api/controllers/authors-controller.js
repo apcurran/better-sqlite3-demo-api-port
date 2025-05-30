@@ -58,7 +58,25 @@ function postAuthor(req, res, next) {
 
 /** @type {import("express").RequestHandler} */
 function deleteAuthor(req, res, next) {
+    try {
+        const { authorId } = req.params;
+        const statement = db.prepare(`
+            DELETE FROM author
+            WHERE author_id = ?;
+        `);
+        const infoObj = statement.run(authorId);
 
+        if (infoObj.changes === 0) {
+            res.status(404).json({ message: "Author not found." });
+
+            return; // stop execution early to not run the later response
+        }
+
+        res.status(200).json({ message: "Author deleted." });
+        
+    } catch (err) {
+        next(err);
+    }
 }
 
 module.exports = {
