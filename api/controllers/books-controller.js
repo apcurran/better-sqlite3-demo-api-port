@@ -61,7 +61,46 @@ function getBook(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function postBook(req, res, next) {
     try {
+        const {
+            title,
+            year,
+            pages,
+            genre,
+            authorFirstName,
+            authorLastName,
+        } = req.body;
 
+        // get author_id by using firstName and lastName cols
+        const selectAuthorStatement = db.prepare(`
+            SELECT author_id
+            FROM author
+            WHERE first_name = ? AND last_name = ?;    
+        `);
+        const author = selectAuthorStatement.get(authorFirstName, authorLastName);
+
+        if (!author) {
+            res.status(404).json({ message: "Author not found; create the author first before adding a book." });
+
+            return;
+        }
+
+        const authorId = author.author_id;
+
+        const insertBookStatement = db.prepare(`
+            INSERT INTO book
+                (title, year, pages, genre, author_id)
+            VALUES
+                (?, ?, ?, ?, ?);
+        `);
+        const infoObj = insertBookStatement.run(title, year, pages, genre, authorId);
+
+        if (infoObj.changes === 0) {
+            res.status(500).json({ message: "Book was not added, aborting operation." });
+
+            return;
+        }
+
+        res.status(201).json({ message: "Book was added successfully." });
 
     } catch (err) {
         next(err);
