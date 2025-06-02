@@ -7,8 +7,8 @@ const authorIdSchema = z.strictObject({
 });
 
 const postAuthorSchema = z.strictObject({
-    firstName: z.string("First name is required").trim(),
-    lastName: z.string("Last name is required").trim(),
+    firstName: z.string("Valid first name is required").trim(),
+    lastName: z.string("Valid last name is required").trim(),
 });
 
 module.exports = {

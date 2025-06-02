@@ -62,7 +62,19 @@ function getAuthor(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function postAuthor(req, res, next) {
     try {
-        const { firstName, lastName } = req.body;
+        // validate user data from req body first
+        const validationResult = postAuthorSchema.safeParse(req.body);
+
+        if (!validationResult.success) {
+            res.status(400).json({
+                message: "Validation failed.",
+                errors: z.flattenError(validationResult.error),
+            });
+            
+            return;
+        }
+
+        const { firstName, lastName } = validationResult.data;
         const statement = db.prepare(`
             INSERT INTO author
                 (first_name, last_name)
