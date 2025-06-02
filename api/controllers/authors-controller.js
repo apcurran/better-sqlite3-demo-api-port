@@ -1,6 +1,9 @@
 "use strict";
 
+const { z } = require("zod/v4");
+
 const { db } = require("../../db/index");
+const { authorIdSchema, postAuthorSchema } = require("../validators/author-validators");
 
 /** @type {import("express").RequestHandler} */
 function getAuthors(req, res, next) {
@@ -22,13 +25,32 @@ function getAuthors(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function getAuthor(req, res, next) {
     try {
-        const { authorId } = req.params;
+        // validate user input first
+        const validAuthorId = authorIdSchema.safeParse(req.params);
+
+        if (!validAuthorId.success) {
+            // send back an error
+            res.status(400).json({
+                message: "Validation failed",
+                errors: z.flattenError(validAuthorId.error),
+            });
+
+            return;
+        }
+
+        const { authorId } = validAuthorId.data;
         const statement = db.prepare(`
             SELECT *
             FROM author
             WHERE author_id = ?;    
         `);
         const author = statement.get(authorId);
+
+        if (!author) {
+            res.status(404).json({ message: "Author not found." });
+            
+            return;
+        }
     
         res.status(200).json(author);
 
