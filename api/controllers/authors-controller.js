@@ -81,9 +81,9 @@ function postAuthor(req, res, next) {
             VALUES
                 (?, ?);
         `);
-        statement.run(firstName, lastName);
+        const info = statement.run(firstName, lastName);
 
-        res.status(201).json({ message: "Author has been added." });
+        res.status(201).json({ message: "Author has been added.", authorId: info.lastInsertRowid });
         
     } catch (err) {
         next(err);
