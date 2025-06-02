@@ -81,7 +81,19 @@ function postAuthor(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function deleteAuthor(req, res, next) {
     try {
-        const { authorId } = req.params;
+        // validate param data
+        const validAuthorId = authorIdSchema.safeParse(req.params);
+
+        if (!validAuthorId.success) {
+            res.status(400).json({
+                message: "Validation failed.",
+                errors: z.flattenError(validAuthorId.error),
+            });
+
+            return;
+        }
+
+        const { authorId } = validAuthorId.data;
         const statement = db.prepare(`
             DELETE FROM author
             WHERE author_id = ?;
