@@ -19,8 +19,8 @@ const postBookSchema = z.strictObject({
         "romance",
         "horror",
     ]),
-    authorFirstName: z.string().trim(),
-    authorLastName: z.string().trim(),
+    authorFirstName: z.string("Author first name is required.").trim(),
+    authorLastName: z.string("Author last name is required.").trim(),
 });
 
 module.exports = {
