@@ -124,7 +124,18 @@ function postBook(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function deleteBook(req, res, next) {
     try {
-        const { bookId } = req.params;
+        const validationResult = bookIdSchema.safeParse(req.params);
+
+        if (!validationResult.success) {
+            res.status(400).json({
+                message: "Validation failed",
+                errors: z.flattenError(validationResult.error),
+            });
+
+            return;
+        }
+
+        const { bookId } = validationResult.data;
         const statement = db.prepare(`
             DELETE FROM book
             WHERE book_id = ?;
