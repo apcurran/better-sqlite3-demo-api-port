@@ -75,6 +75,17 @@ function getBook(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function postBook(req, res, next) {
     try {
+        const validationResult = postBookSchema.safeParse(req.body);
+
+        if (!validationResult.success) {
+            res.status(400).json({
+                message: "Validation failed",
+                errors: z.flattenError(validationResult.error),
+            });
+            
+            return;
+        }
+
         const {
             title,
             year,
@@ -82,7 +93,7 @@ function postBook(req, res, next) {
             genre,
             authorFirstName,
             authorLastName,
-        } = req.body;
+        } = validationResult.data;
 
         // get author_id by using firstName and lastName cols
         const selectAuthorStatement = db.prepare(`
@@ -99,7 +110,6 @@ function postBook(req, res, next) {
         }
 
         const authorId = author.author_id;
-
         const insertBookStatement = db.prepare(`
             INSERT INTO book
                 (title, year, pages, genre, author_id)
@@ -114,7 +124,7 @@ function postBook(req, res, next) {
             return;
         }
 
-        res.status(201).json({ message: "Book was added successfully." });
+        res.status(201).json({ message: "Book was added successfully.", bookId: infoObj.lastInsertRowid });
 
     } catch (err) {
         next(err);
