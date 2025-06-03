@@ -1,6 +1,8 @@
 "use strict";
 
+const { z } = require("zod/v4");
 const { db } = require("../../db/index");
+const { bookIdSchema, postBookSchema } = require("../validators/book-validators");
 
 /** @type {import("express").RequestHandler} */
 function getBooks(req, res, next) {
@@ -29,7 +31,19 @@ function getBooks(req, res, next) {
 /** @type {import("express").RequestHandler} */
 function getBook(req, res, next) {
     try {
-        const { bookId } = req.params;
+        // validate id param first
+        const validationResult = bookIdSchema.safeParse(req.params);
+
+        if (!validationResult.success) {
+            res.status(400).json({
+                message: "Validation error",
+                errors: z.flattenError(validationResult.error),
+            });
+
+            return;
+        }
+
+        const { bookId } = validationResult.data;
         const statement = db.prepare(`
             SELECT
                 book.book_id,
