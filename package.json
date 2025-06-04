@@ -6,7 +6,8 @@
     "scripts": {
         "test": "",
         "start": "node --env-file=.env server.js",
-        "dev": "node --watch --env-file=.env server.js"
+        "dev": "node --watch --env-file=.env server.js",
+        "lint": "npx eslint ."
     },
     "author": "Alex Curran",
     "license": "ISC",
