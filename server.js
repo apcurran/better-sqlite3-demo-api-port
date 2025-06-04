@@ -19,6 +19,7 @@ app.use("/api/authors", authorsRouter);
 app.use("/api/books", booksRouter);
 
 // general server error handler
+// eslint-disable-next-line no-unused-vars
 app.use((err, req, res, next) => {
     console.error(err.stack || err);
 
