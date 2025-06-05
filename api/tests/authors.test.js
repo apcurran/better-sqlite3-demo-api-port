@@ -23,6 +23,6 @@ describe("author tests", function () {
             .expect("Content-Type", /json/)
             .expect(200);
 
-        assert.equal(response.body.length, 9);
+        assert.strictEqual(response.body.length, 9);
     });
 });
