@@ -1,6 +1,7 @@
 "use strict";
 
 const { describe, it, beforeEach } = require("node:test");
+const assert = require("node:assert/strict");
 const request = require("supertest");
 const express = require("express");
 
@@ -16,10 +17,12 @@ beforeEach(() => {
 });
 
 describe("author tests", function () {
-    it("GET all authors", (currTest, done) => {
-        request(app)
+    it("GET all authors", async () => {
+        const response = await request(app)
             .get("/api/authors")
             .expect("Content-Type", /json/)
-            .expect(200, done);
+            .expect(200);
+
+        assert.equal(response.body.length, 9);
     });
 });
