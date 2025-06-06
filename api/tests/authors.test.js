@@ -37,4 +37,17 @@ describe("author tests", function () {
         assert.ok(typeof response.body.first_name === "string", "first_name should be a string");
         assert.ok(typeof response.body.last_name === "string", "last_name should be a string");
     });
+
+    it("POST adds one new author, 'William Shakespeare'", async () => {
+        const firstName = "William";
+        const lastName = "Shakespeare";
+        const response = await request(app)
+            .post("/api/authors")
+            .send({ firstName, lastName })
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 201);
+        assert.ok(typeof response.body.authorId === "number", "authorId field should be a number");
+        assert.ok(typeof response.body.message === "string", "message field should be a string");
+    });
 });
