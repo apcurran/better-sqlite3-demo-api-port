@@ -50,4 +50,20 @@ describe("author tests", function () {
         assert.ok(typeof response.body.authorId === "number", "authorId field should be a number");
         assert.ok(typeof response.body.message === "string", "message field should be a string");
     });
+
+    it("DELETE one author by id", async () => {
+        const authorId = 8;
+        const response = await request(app)
+            .delete(`/api/authors/${authorId}`)
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 200);
+        assert.ok(typeof response.body.message === "string", "message field should be a string");
+
+        const followUpCheck = await request(app)
+            .get(`/api/authors/${authorId}`)
+            .set("Accept", "application/json");
+
+        assert.equal(followUpCheck.status, 404, "Deleted author should be gone.");
+    });
 });
