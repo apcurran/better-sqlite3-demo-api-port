@@ -25,4 +25,16 @@ describe("author tests", function () {
 
         assert.strictEqual(response.body.length, 9);
     });
+
+    it("GET one specific author by id", async () => {
+        const authorId = 3;
+        const response = await request(app)
+            .get(`/api/authors/${authorId}`)
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 200);
+        assert.ok(typeof response.body.author_id === "number", "author_id should be a number");
+        assert.ok(typeof response.body.first_name === "string", "first_name should be a string");
+        assert.ok(typeof response.body.last_name === "string", "last_name should be a string");
+    });
 });
