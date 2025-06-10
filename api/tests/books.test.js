@@ -51,4 +51,23 @@ describe("books router tests", () => {
             .expect("Content-Type", /json/)
             .expect(404);
     });
+
+    it("POST adds one new book, 'The Fellowship of the Ring'", async () => {
+        const book = {
+            title: "The Fellowship of the Ring",
+            year: 1954,
+            pages: 432,
+            genre: "fantasy",
+            authorFirstName: "J.R.R.",
+            authorLastName: "Tolkien",
+        };
+        const response = await request(app)
+            .post("/api/books")
+            .send(book)
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 201);
+        assert.ok(typeof response.body.message === "string", "message field should be a string");
+        assert.ok(typeof response.body.bookId === "number", "bookId should be a number");
+    });
 });
