@@ -11,7 +11,10 @@ const postAuthorSchema = z.strictObject({
     lastName: z.string("Valid last name is required").trim(),
 });
 
+const patchAuthorSchema = postAuthorSchema.partial();
+
 module.exports = {
     authorIdSchema,
     postAuthorSchema,
+    patchAuthorSchema,
 };
