@@ -91,6 +91,19 @@ function postAuthor(req, res, next) {
 }
 
 /** @type {import("express").RequestHandler} */
+function patchAuthor(req, res, next) {
+    try {
+        // validate data
+
+        // build UPDATE query with named better-sqlite3 parameters
+
+        // execute and send back a response
+    } catch (err) {
+        next(err);
+    }
+}
+
+/** @type {import("express").RequestHandler} */
 function deleteAuthor(req, res, next) {
     try {
         // validate param data
@@ -129,5 +142,6 @@ module.exports = {
     getAuthors,
     getAuthor,
     postAuthor,
+    patchAuthor,
     deleteAuthor,
 };

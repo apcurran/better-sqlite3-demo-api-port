@@ -10,6 +10,8 @@ router.get("/:authorId", authorsController.getAuthor);
 
 router.post("/", authorsController.postAuthor);
 
+router.post("/:authorId", authorsController.patchAuthor);
+
 router.delete("/:authorId", authorsController.deleteAuthor);
 
 module.exports = router;
