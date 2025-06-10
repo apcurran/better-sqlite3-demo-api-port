@@ -67,7 +67,22 @@ describe("books router tests", () => {
             .set("Accept", "application/json");
         assert.match(response.headers["content-type"], /json/);
         assert.equal(response.status, 201);
-        assert.ok(typeof response.body.message === "string", "message field should be a string");
-        assert.ok(typeof response.body.bookId === "number", "bookId should be a number");
+        assert.equal(typeof response.body.message, "string", "message field should be a string");
+        assert.equal(typeof response.body.bookId, "number", "bookId should be a number");
+    });
+
+    it("DELETE one book by id", async () => {
+        const bookId = 3;
+        const response = await request(app)
+            .delete(`/api/books/${bookId}`)
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 200);
+        assert.equal(typeof response.body.message, "string", "expected message field should be a string");
+
+        const followUpCheck = await request(app)
+            .get(`/api/books/${bookId}`)
+            .set("Accept", "application/json");
+        assert.equal(followUpCheck.status, 404, "Deleted book should be gone now");
     });
 });
