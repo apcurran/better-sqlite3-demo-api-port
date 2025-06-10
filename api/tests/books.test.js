@@ -43,4 +43,12 @@ describe("books router tests", () => {
         assert.equal(typeof first_name, "string");
         assert.equal(typeof last_name, "string");
     });
+
+    it("GET a book with an invalid id returns 404 not found", async () => {
+        const bookId = 9000;
+        await request(app)
+            .get(`/api/books/${bookId}`)
+            .expect("Content-Type", /json/)
+            .expect(404);
+    });
 });
