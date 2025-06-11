@@ -94,7 +94,6 @@ function postBook(req, res, next) {
             authorFirstName,
             authorLastName,
         } = validationResult.data;
-
         // get author_id by using firstName and lastName cols
         const selectAuthorStatement = db.prepare(`
             SELECT author_id
