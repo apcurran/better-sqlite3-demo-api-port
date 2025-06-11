@@ -7,5 +7,9 @@
 pre-commit:
   parallel: true
   jobs:
-    - run: npx eslint --fix {staged_files}
+    - name: oxlint
+      run: npx oxlint --fix {staged_files}
+      glob: "*.{js,ts,jsx,tsx}"
+    - name: eslint
+      run: npx eslint --fix {staged_files}
       glob: "*.{js,ts,jsx,tsx}"
