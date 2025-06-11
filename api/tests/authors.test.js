@@ -51,6 +51,19 @@ describe("author tests", function () {
         assert.ok(typeof response.body.message === "string", "message field should be a string");
     });
 
+    it("PATCH updates one author", async () => {
+        const authorId = 5;
+        const response = await request(app)
+            .patch(`/api/authors/${authorId}`)
+            .send({
+                firstName: "Carlos",
+            })
+            .set("Accept", "application/json");
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 200);
+        assert.equal(typeof response.body.message, "string", "expected message field to be a string");
+    });
+
     it("DELETE one author by id", async () => {
         const authorId = 8;
         const response = await request(app)
