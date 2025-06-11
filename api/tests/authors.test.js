@@ -62,6 +62,12 @@ describe("author tests", function () {
         assert.match(response.headers["content-type"], /json/);
         assert.equal(response.status, 200);
         assert.equal(typeof response.body.message, "string", "expected message field to be a string");
+
+        // check to see that first name change was successful
+        const followUpCheckName = await request(app)
+            .get(`/api/authors/${authorId}`)
+            .set("Accept", "application/json");
+        assert.equal(followUpCheckName.body.first_name, "Carlos");
     });
 
     it("DELETE one author by id", async () => {
