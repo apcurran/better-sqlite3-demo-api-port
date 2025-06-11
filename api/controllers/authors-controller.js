@@ -134,7 +134,6 @@ function patchAuthor(req, res, next) {
                 return `${dbColumn} = @${key}`; // ex. "first_name = @firstName"
             })
             .join(", ");
-
         const statement = db.prepare(`
             UPDATE author
             SET ${setClause}
