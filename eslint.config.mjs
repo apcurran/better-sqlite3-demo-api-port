@@ -3,6 +3,7 @@ import globals from "globals";
 import json from "@eslint/json";
 import markdown from "@eslint/markdown";
 import stylistic from "@stylistic/eslint-plugin";
+import oxlint from "eslint-plugin-oxlint";
 import { defineConfig } from "eslint/config";
 
 
@@ -41,4 +42,5 @@ export default defineConfig([
             "@stylistic/eol-last": ["error", "always"],
         },
     },
+    ...oxlint.configs["flat/recommended"], // oxlint should be the last one
 ]);
