@@ -2,7 +2,7 @@
 
 const { z } = require("zod/v4");
 const { db } = require("../../db/index");
-const { bookIdSchema, postBookSchema } = require("../validators/book-validators");
+const { bookIdSchema, postBookSchema, patchBookSchema } = require("../validators/book-validators");
 
 /** @type {import("express").RequestHandler} */
 function getBooks(req, res, next) {
@@ -131,8 +131,37 @@ function postBook(req, res, next) {
 }
 
 /** @type {import("express").RequestHandler} */
-function patchBook(params) {
-    
+function patchBook(req, res, next) {
+    try {
+        // validate data first
+        const bookIdValidation = bookIdSchema.safeParse(req.params);
+
+        if (!bookIdValidation.success) {
+            res.status(400).json({
+                message: "Validation error for book ID",
+                errors: z.flattenError(bookIdValidation.error),
+            });
+
+            return;
+        }
+
+        const updateBodyDataValidation = patchBookSchema.safeParse(req.body);
+
+        if (!updateBodyDataValidation.success) {
+            res.status(400).json({
+                message: "Validation error for update data",
+                errors: z.flattenError(updateBodyDataValidation.error),
+            });
+
+            return;
+        }
+
+        const { bookId } = bookIdValidation.data;
+        const updates = updateBodyDataValidation.data;
+
+    } catch (err) {
+        next(err);
+    }
 }
 
 /** @type {import("express").RequestHandler} */
