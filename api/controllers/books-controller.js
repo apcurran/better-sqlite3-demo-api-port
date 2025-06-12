@@ -131,6 +131,11 @@ function postBook(req, res, next) {
 }
 
 /** @type {import("express").RequestHandler} */
+function patchBook(params) {
+    
+}
+
+/** @type {import("express").RequestHandler} */
 function deleteBook(req, res, next) {
     try {
         const validationResult = bookIdSchema.safeParse(req.params);
@@ -168,5 +173,6 @@ module.exports = {
     getBooks,
     getBook,
     postBook,
+    patchBook,
     deleteBook,
 };
