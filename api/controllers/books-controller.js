@@ -1,6 +1,6 @@
 "use strict";
 
-const { z } = require("zod/v4");
+const { z, check } = require("zod/v4");
 const { db } = require("../../db/index");
 const { bookIdSchema, postBookSchema, patchBookSchema } = require("../validators/book-validators");
 
@@ -178,9 +178,54 @@ function patchBook(req, res, next) {
             return;
         }
 
+        // update SET clause
         setClauses.push("author_id = @authorId");
+        // update params obj for UPDATE run
         paramsObj.authorId = updates.authorId;
 
+        // check all remaining valid update keys
+        for (let key in updates) {
+            // already handled authorId -> skip
+            if (key === "authorId") continue;
+
+            if (Object.hasOwn(updates, key) && updates[key] !== undefined) {
+                // must be in snakecase format for updates keys
+                setClauses.push(`${key} = @${key}`);
+                paramsObj[key] = updates[key];
+            }
+        }
+
+        if (setClauses.length === 0) {
+            res.status(400).json({ message: "No valid fields to update." });
+
+            return;
+        }
+
+        const updateStatement = db.prepare(`
+            UPDATE book
+            SET ${setClauses.join(", ")}    
+            WHERE book_id = @bookId;
+        `);
+        const infoObj = updateStatement.run(paramsObj);
+
+        if (infoObj.changes === 0) {
+            const checkupBookStatement = db.prepare(`
+                SELECT book_id
+                FROM book
+                WHERE book_id = @bookId; 
+            `);
+            const bookExists = checkupBookStatement.get({ bookId });
+
+            if (!bookExists) {
+                res.status(404).json({ message: "Book not found" });
+
+                return;
+            }
+
+            res.status(200).json({ message: "No adjustments to book were made (same data provided)." });
+        }
+
+        res.status(200).json({ message: "Book updated successfully." });
 
     } catch (err) {
         next(err);
