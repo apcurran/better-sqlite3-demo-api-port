@@ -23,7 +23,14 @@ const postBookSchema = z.strictObject({
     authorLastName: z.string("Author last name is required.").trim(),
 });
 
+// create a copy of postBookSchema to prevent code duplication
+// however, make fields optional and add a check using .refine() with a custom error message
+const patchBookSchema = postBookSchema
+    .partial()
+    .refine((data) => Object.keys(data).length > 0, { message: "You must provide at least one field to update." });
+
 module.exports = {
     bookIdSchema,
     postBookSchema,
+    patchBookSchema,
 };
