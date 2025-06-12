@@ -159,6 +159,29 @@ function patchBook(req, res, next) {
         const { bookId } = bookIdValidation.data;
         const updates = updateBodyDataValidation.data;
 
+        let paramsObj = {
+            bookId,
+        };
+        let setClauses = [];
+
+        // ensure that the authorId from req body data is actually valid and exists in author table
+        const selectAuthorStatement = db.prepare(`
+            SELECT author_id
+            FROM author
+            WHERE author_id = @authorId;    
+        `);
+        const author = selectAuthorStatement.get({ authorId: updates.authorId });
+
+        if (!author) {
+            res.status(404).json({ message: "You must provide a valid author ID." });
+
+            return;
+        }
+
+        setClauses.push("author_id = @authorId");
+        paramsObj.authorId = updates.authorId;
+
+
     } catch (err) {
         next(err);
     }
