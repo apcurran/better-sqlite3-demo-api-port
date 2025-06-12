@@ -25,9 +25,22 @@ const postBookSchema = z.strictObject({
 
 // create a copy of postBookSchema to prevent code duplication
 // however, make fields optional and add a check using .refine() with a custom error message
-const patchBookSchema = postBookSchema
-    .partial()
-    .refine((data) => Object.keys(data).length > 0, { message: "You must provide at least one field to update." });
+const patchBookSchema = z.strictObject({
+    title: z.string().trim().optional(),
+    year: z.int().positive().optional(),
+    pages: z.int().positive().optional(),
+    genre: z.enum([
+        "fantasy",
+        "sci-fi",
+        "mystery",
+        "non-fiction",
+        "fiction",
+        "romance",
+        "horror",
+    ]).optional(),
+    authorId: z.int().positive("Autho ID must be a positive number."),
+})
+    .refine((data) => Object.keys(data).length > 1, { message: "You must provide at least one field to update." });
 
 module.exports = {
     bookIdSchema,
