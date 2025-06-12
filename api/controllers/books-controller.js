@@ -1,6 +1,6 @@
 "use strict";
 
-const { z, check } = require("zod/v4");
+const { z } = require("zod/v4");
 const { db } = require("../../db/index");
 const { bookIdSchema, postBookSchema, patchBookSchema } = require("../validators/book-validators");
 
