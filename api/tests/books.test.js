@@ -98,6 +98,20 @@ describe("books router tests", () => {
         assert.equal(getResponse.body.pages, updatedPageCount, `Book pages should be updated to ${updatedPageCount}`);
     });
 
+    it("PATCH request returns 404 for a non-existent book ID", async () => {
+        const nonExistentBookId = 1_000_000;
+        const year = 2000;
+        const originalAuthorId = 3;
+        const response = await request(app)
+            .patch(`/api/books/${nonExistentBookId}`)
+            .send({
+                "year": year,
+                "authorId": originalAuthorId,
+            });
+
+        assert.equal(response.status, 404, "Response should return not found error code");
+    });
+
     it("DELETE one book by id", async () => {
         const bookId = 3;
         const response = await request(app)
