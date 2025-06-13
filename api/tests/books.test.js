@@ -71,12 +71,11 @@ describe("books router tests", () => {
         assert.equal(typeof response.body.bookId, "number", "bookId should be a number");
     });
 
-    it("PATCH updates one book by ID", async () => {
+    it("PATCH updates one book by ID and verifies the data changed correctly", async () => {
         const bookId = 3;
         const updatedYear = 2000;
         const updatedPageCount = 500;
         const originalAuthorId = 3;
-
         const response = await request(app)
             .patch(`/api/books/${bookId}`)
             .send({
@@ -88,6 +87,15 @@ describe("books router tests", () => {
         assert.match(response.headers["content-type"], /json/, "PATCH response should be JSON data");
         assert.equal(response.status, 200);
         assert.equal(typeof response.body.message, "string", "message field should be a string");
+
+        // verify update took place
+        const getResponse = await request(app)
+            .get(`/api/books/${bookId}`);
+
+        assert.equal(getResponse.status, 200, "GET response status should be 200 OK after update");
+        assert.equal(getResponse.body.book_id, bookId, "Retrieved book ID should match");
+        assert.equal(getResponse.body.year, updatedYear, `Book year should be updated to ${updatedYear}`);
+        assert.equal(getResponse.body.pages, updatedPageCount, `Book pages should be updated to ${updatedPageCount}`);
     });
 
     it("DELETE one book by id", async () => {
