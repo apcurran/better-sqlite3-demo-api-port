@@ -73,14 +73,19 @@ describe("books router tests", () => {
 
     it("PATCH updates one book by ID", async () => {
         const bookId = 3;
+        const updatedYear = 2000;
+        const updatedPageCount = 500;
+        const originalAuthorId = 3;
+
         const response = await request(app)
             .patch(`/api/books/${bookId}`)
             .send({
-                "year": 2000, // change from 2001
-                "pages": 500, // change from 480
-                "authorId": 3, // must have authorId in req
+                "year": updatedYear, // change from 2001
+                "pages": updatedPageCount, // change from 480
+                "authorId": originalAuthorId, // must have authorId in req
             });
-        assert.match(response.headers["content-type"], /json/);
+
+        assert.match(response.headers["content-type"], /json/, "PATCH response should be JSON data");
         assert.equal(response.status, 200);
         assert.equal(typeof response.body.message, "string", "message field should be a string");
     });
