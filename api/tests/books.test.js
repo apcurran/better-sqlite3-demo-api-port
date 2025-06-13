@@ -71,6 +71,20 @@ describe("books router tests", () => {
         assert.equal(typeof response.body.bookId, "number", "bookId should be a number");
     });
 
+    it("PATCH updates one book by ID", async () => {
+        const bookId = 3;
+        const response = await request(app)
+            .patch(`/api/books/${bookId}`)
+            .send({
+                "year": 2000, // change from 2001
+                "pages": 500, // change from 480
+                "authorId": 3, // must have authorId in req
+            });
+        assert.match(response.headers["content-type"], /json/);
+        assert.equal(response.status, 200);
+        assert.equal(typeof response.body.message, "string", "message field should be a string");
+    });
+
     it("DELETE one book by id", async () => {
         const bookId = 3;
         const response = await request(app)
