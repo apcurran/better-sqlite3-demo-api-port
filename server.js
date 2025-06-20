@@ -19,6 +19,11 @@ if (process.env.DEV_DEBUG === "true") {
 app.use("/api/authors", authorsRouter);
 app.use("/api/books", booksRouter);
 
+// custom 404
+app.use((req, res, next) => {
+    res.status(404).json({ message: "Sorry, but this resource cannot be found." });
+});
+
 // general server error handler
 app.use((err, req, res, _next) => {
     console.error(err.stack || err);
