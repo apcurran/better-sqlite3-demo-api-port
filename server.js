@@ -7,6 +7,7 @@ const booksRouter = require("./api/routes/books-router");
 
 const app = express();
 
+app.disable("x-powered-by");
 app.use(express.json());
 
 if (process.env.DEV_DEBUG === "true") {
