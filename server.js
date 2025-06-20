@@ -20,7 +20,7 @@ app.use("/api/authors", authorsRouter);
 app.use("/api/books", booksRouter);
 
 // custom 404
-app.use((req, res, next) => {
+app.use((req, res) => {
     res.status(404).json({ message: "Sorry, but this resource cannot be found." });
 });
 
